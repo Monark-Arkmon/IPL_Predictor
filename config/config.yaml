@@ -1,0 +1,99 @@
+# Configuration settings for IPL Predictor
+app:
+  name: "IPL Match Predictor"
+  version: "1.0.0"
+  debug: false
+  timezone: "Asia/Kolkata"
+
+# Data configuration
+data:
+  raw_data_path: "data/raw"
+  processed_data_path: "data/processed"
+  matches_file: "matches.csv"
+  deliveries_file: "deliveries.csv"
+  feature_store_path: "data/processed/features.parquet"
+  validation:
+    min_matches_per_team: 10
+    max_missing_values_ratio: 0.1
+
+# Model configuration
+models:
+  model_path: "models"
+  experiment_name: "ipl_predictor"
+  algorithms:
+    - "random_forest"
+    - "xgboost"
+    - "lightgbm"
+    - "catboost"
+    - "neural_network"
+  
+  hyperparameters:
+    random_forest:
+      n_estimators: [100, 200, 300]
+      max_depth: [10, 15, 20, null]
+      min_samples_split: [2, 5, 10]
+      min_samples_leaf: [1, 2, 4]
+    
+    xgboost:
+      n_estimators: [100, 200, 300]
+      max_depth: [6, 8, 10]
+      learning_rate: [0.01, 0.1, 0.2]
+      subsample: [0.8, 0.9, 1.0]
+    
+    lightgbm:
+      n_estimators: [100, 200, 300]
+      max_depth: [6, 8, 10]
+      learning_rate: [0.01, 0.1, 0.2]
+      num_leaves: [31, 50, 100]
+
+# Feature engineering
+features:
+  team_features:
+    - "win_rate"
+    - "batting_strength"
+    - "bowling_economy"
+    - "recent_form"
+    - "venue_advantage"
+  
+  match_features:
+    - "toss_advantage"
+    - "head_to_head"
+    - "weather_conditions"
+    - "playoff_status"
+  
+  advanced_features:
+    - "momentum_score"
+    - "pressure_index"
+    - "player_impact_score"
+
+# MLOps configuration
+mlflow:
+  tracking_uri: "mlruns"
+  experiment_name: "ipl_predictor"
+  model_registry_name: "ipl_model"
+  autolog: true
+
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+
+# Monitoring
+monitoring:
+  log_level: "INFO"
+  log_file: "logs/app.log"
+  metrics_file: "logs/metrics.log"
+  alert_thresholds:
+    accuracy_drop: 0.05
+    prediction_latency: 1.0
+    data_drift_score: 0.3
+
+# Database (optional)
+database:
+  url: "sqlite:///data/ipl_predictor.db"
+  echo: false

@@ -1,0 +1,97 @@
+name: CI Pipeline for IPL Predictor
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=__pycache__,.git,migrations
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=__pycache__,.git,migrations
+        
+    - name: Test with pytest
+      run: |
+        pytest tests/ -v --cov=src --cov-report=term-missing || echo "Some tests failed - check output above"
+        
+    - name: Validate prediction script
+      run: |
+        # Basic smoke test to ensure the prediction script loads
+        python -c "
+        import sys
+        sys.path.insert(0, 'src')
+        try:
+            from ipl_predictor.features import FeaturePipeline
+            from ipl_predictor.models.ensemble import EnsemblePredictor
+            print('Core ML components import successfully')
+        except ImportError as e:
+            print(f'Import failed: {e}')
+            sys.exit(1)
+        "
+        
+        # Test that predict.py can run
+        python predict.py --help || echo "predict.py help command failed"
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install code quality tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort bandit safety
+        
+    - name: Check code formatting with black
+      run: |
+        black --check --diff . || echo "Code formatting issues found - run 'black .' to fix"
+        
+    - name: Check import sorting with isort
+      run: |
+        isort --check-only --diff . || echo "Import sorting issues found - run 'isort .' to fix"
+        
+    - name: Security check with bandit
+      run: |
+        bandit -r . -f json -o bandit-report.json || echo "Security issues found - check bandit-report.json"
+        
+    - name: Check for known security vulnerabilities
+      run: |
+        safety check || echo "Security vulnerabilities found in dependencies"

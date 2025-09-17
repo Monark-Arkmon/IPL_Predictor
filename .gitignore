@@ -80,6 +80,7 @@ Desktop.ini
 
 # Data files
 data/enhanced/
+data/processed/
 
 # Model files
 models/*.pkl
@@ -92,6 +93,7 @@ models/*.model
 logs/*.log
 logs/*.out
 *.log
+logs/
 
 # MLflow
 mlruns/
