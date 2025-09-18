@@ -100,7 +100,6 @@ class ContextFeatureEngine:
         enhanced_features['venue_json_matches'] = len(venue_context)
         
         return enhanced_features
-        return features
     
     def extract_match_timing_features(self, match_date: str) -> Dict[str, float]:
         """Extract features based on match timing."""
