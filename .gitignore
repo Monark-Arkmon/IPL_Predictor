@@ -87,6 +87,7 @@ models/*.pkl
 models/*.joblib
 models/*.h5
 models/*.model
+models/*
 !models/.gitkeep
 
 # Logs
