@@ -94,7 +94,10 @@ models/*
 logs/*.log
 logs/*.out
 *.log
-logs/
+logs/*.json
+logs/*.csv
+logs/*.txt
+!logs/.gitkeep
 
 # MLflow
 mlruns/
