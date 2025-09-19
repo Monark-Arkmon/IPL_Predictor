@@ -280,9 +280,11 @@ class TrainingPipeline:
             probabilities = model.predict_proba(X_test)[:, 1]
 
             # Calculate metrics
-            from sklearn.metrics import (accuracy_score,
-                                         precision_recall_fscore_support,
-                                         roc_auc_score)
+            from sklearn.metrics import (
+                accuracy_score,
+                precision_recall_fscore_support,
+                roc_auc_score,
+            )
 
             accuracy = accuracy_score(y_test, predictions)
             auc = roc_auc_score(y_test, probabilities)

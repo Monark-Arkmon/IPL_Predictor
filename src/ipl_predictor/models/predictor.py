@@ -31,16 +31,27 @@ import optuna
 import xgboost as xgb
 from catboost import CatBoostClassifier
 from sklearn.decomposition import PCA
+
 # ML Libraries
-from sklearn.ensemble import (RandomForestClassifier, StackingClassifier,
-                              VotingClassifier)
-from sklearn.feature_selection import (RFE, SelectFromModel, SelectKBest,
-                                       f_classif)
+from sklearn.ensemble import (
+    RandomForestClassifier,
+    StackingClassifier,
+    VotingClassifier,
+)
+from sklearn.feature_selection import RFE, SelectFromModel, SelectKBest, f_classif
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (accuracy_score, classification_report,
-                             confusion_matrix, roc_auc_score)
-from sklearn.model_selection import (GridSearchCV, RandomizedSearchCV,
-                                     StratifiedKFold, cross_val_score)
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    roc_auc_score,
+)
+from sklearn.model_selection import (
+    GridSearchCV,
+    RandomizedSearchCV,
+    StratifiedKFold,
+    cross_val_score,
+)
 
 # SHAP for model explanations
 try:
