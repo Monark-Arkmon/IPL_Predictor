@@ -3,16 +3,17 @@ Neural network model for IPL match prediction.
 Deep learning approach for pattern recognition in sports data.
 """
 
+import logging
+import pickle
+from pathlib import Path
+from typing import Dict, List
+
 import numpy as np
 import pandas as pd
-from typing import Dict, List
-import pickle
-from sklearn.preprocessing import StandardScaler
+import tensorflow as tf
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import train_test_split
-import logging
-from pathlib import Path
-import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 from tensorflow import keras  # type: ignore
 from tensorflow.keras import layers  # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping  # type: ignore
@@ -101,7 +102,7 @@ class NeuralNetworkPredictor:
 
         # Early stopping callback
         early_stopping = EarlyStopping(
-            monitor="val_loss", patience=10, restore_best_weights=True, verbose=1
+            monitor="val_loss", patience=15, restore_best_weights=True, verbose=1
         )
 
         # Train model
@@ -109,7 +110,7 @@ class NeuralNetworkPredictor:
             X_train_scaled,
             y_train,
             validation_data=(X_val_scaled, y_val),
-            epochs=100,
+            epochs=200,
             batch_size=32,
             callbacks=[early_stopping],
             verbose=1,
@@ -178,8 +179,8 @@ class NeuralNetworkPredictor:
         # Convert to Path object if string
         filepath = Path(filepath)
 
-        # Save Keras model
-        model_path = filepath.parent / f"{filepath.stem}_keras_model.h5"
+        # Save Keras model (using modern .keras format)
+        model_path = filepath.parent / f"{filepath.stem}_keras_model.keras"
         self.model.save(model_path)  # type: ignore
 
         # Save scaler and metadata

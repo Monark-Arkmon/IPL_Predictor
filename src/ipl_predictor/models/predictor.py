@@ -3,53 +3,44 @@ Professional ML model training and prediction system with MLflow integration.
 Includes ensemble methods, hyperparameter optimization, SHAP explanations, and model versioning.
 """
 
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Tuple, Optional, Any, Union
 import logging
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 import joblib
 import mlflow
+import numpy as np
+import pandas as pd
 
 try:
+    import mlflow.lightgbm
     import mlflow.sklearn
     import mlflow.xgboost
-    import mlflow.lightgbm
 
     MLFLOW_TRACKING_AVAILABLE = True
 except ImportError:
     MLFLOW_TRACKING_AVAILABLE = False
-from datetime import datetime
 import json
 import warnings
+from datetime import datetime
 
 warnings.filterwarnings("ignore")
 
-# ML Libraries
-from sklearn.ensemble import (
-    RandomForestClassifier,
-    VotingClassifier,
-    StackingClassifier,
-)
-from sklearn.model_selection import (
-    cross_val_score,
-    GridSearchCV,
-    RandomizedSearchCV,
-    StratifiedKFold,
-)
-from sklearn.metrics import (
-    accuracy_score,
-    classification_report,
-    confusion_matrix,
-    roc_auc_score,
-)
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_selection import SelectKBest, f_classif, RFE, SelectFromModel
-from sklearn.decomposition import PCA
-import xgboost as xgb
 import lightgbm as lgb
-from catboost import CatBoostClassifier
 import optuna
+import xgboost as xgb
+from catboost import CatBoostClassifier
+from sklearn.decomposition import PCA
+# ML Libraries
+from sklearn.ensemble import (RandomForestClassifier, StackingClassifier,
+                              VotingClassifier)
+from sklearn.feature_selection import (RFE, SelectFromModel, SelectKBest,
+                                       f_classif)
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (accuracy_score, classification_report,
+                             confusion_matrix, roc_auc_score)
+from sklearn.model_selection import (GridSearchCV, RandomizedSearchCV,
+                                     StratifiedKFold, cross_val_score)
 
 # SHAP for model explanations
 try:

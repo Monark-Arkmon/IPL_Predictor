@@ -4,12 +4,13 @@ Analyzes team strength, balance, and performance patterns.
 Enhanced with career statistics and player profiles.
 """
 
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Tuple
 import logging
 from collections import Counter
 from pathlib import Path
+from typing import Dict, List, Tuple
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 

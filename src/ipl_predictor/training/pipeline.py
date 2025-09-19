@@ -3,18 +3,19 @@ Training pipeline for IPL prediction models.
 Handles data preparation, model training, and evaluation.
 """
 
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from sklearn.model_selection import cross_val_score, StratifiedKFold
-import logging
-from typing import Dict, Tuple, Optional
 import json
+import logging
+from pathlib import Path
+from typing import Dict, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 from ..features import FeaturePipeline
-from ..models.xgboost_model import XGBoostPredictor
-from ..models.neural_network import NeuralNetworkPredictor
 from ..models.ensemble import EnsemblePredictor
+from ..models.neural_network import NeuralNetworkPredictor
+from ..models.xgboost_model import XGBoostPredictor
 
 logger = logging.getLogger(__name__)
 
@@ -279,11 +280,9 @@ class TrainingPipeline:
             probabilities = model.predict_proba(X_test)[:, 1]
 
             # Calculate metrics
-            from sklearn.metrics import (
-                accuracy_score,
-                roc_auc_score,
-                precision_recall_fscore_support,
-            )
+            from sklearn.metrics import (accuracy_score,
+                                         precision_recall_fscore_support,
+                                         roc_auc_score)
 
             accuracy = accuracy_score(y_test, predictions)
             auc = roc_auc_score(y_test, probabilities)
