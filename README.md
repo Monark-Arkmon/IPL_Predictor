@@ -48,10 +48,3 @@ python predict.py "GT" "RR" "Narendra Modi Stadium" --toss-winner "GT" --toss-de
 **ML/Data**: pandas, scikit-learn, XGBoost, TensorFlow, numpy  
 **MLOps**: Automated pipelines, model versioning, comprehensive logging  
 **Testing**: pytest, 90%+ coverage, CI/CD with GitHub Actions  
-**Architecture**: Modular design, configurable pipelines
-
-## Project Highlights
-
-**Scalable Architecture**: Modular feature engines and model components  
-**Real-World Validation**: 74.8% accuracy on live 2025 IPL season (19/25 correct predictions)  
-**Professional Standards**: Comprehensive testing, documentation, CI/CD
